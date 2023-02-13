@@ -1,2 +1,2 @@
-# deep-study
-深度学习笔记，代码
+# python-study
+学习的一些基础知识，用python写代码
