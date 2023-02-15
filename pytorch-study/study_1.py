@@ -29,8 +29,8 @@ def step_gradient(b_current, w_current, points, learningRate):
         x = points[i, 0]
         y = points[i, 1]
         # loss=(wx+b-y)**2 
-        b_current = (2/N)*(w_current*x+b_current-y)
-        w_current = (2/N)*(w_current*x+b_current-y)*x
+        b_gradient = (2/N)*(w_current*x+b_current-y)
+        w_gradient = (2/N)*(w_current*x+b_current-y)*x
         
     # 沿梯度下降
     new_b = b_current-(learningRate*b_gradient)
