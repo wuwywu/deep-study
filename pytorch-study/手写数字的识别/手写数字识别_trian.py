@@ -6,3 +6,6 @@ import torch
 # print(torch.__version__)
 # print('gpu:', torch.cuda.is_available())
 
+
+batch_size = 512
+# step1. load dataset
