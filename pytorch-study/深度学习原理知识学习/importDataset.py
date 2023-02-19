@@ -85,7 +85,7 @@ class read_dataset_mnist:
     
 
 if __name__ == "__main__":
-    path = r".\dataset"
+    path = r"./dataset"
     filename_images = "train-images-idx3-ubyte"
     filename_labels = "train-labels-idx1-ubyte"
 
