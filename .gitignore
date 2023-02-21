@@ -131,3 +131,4 @@ dmypy.json
 # self
 *.zip
 Deep-Learning-with-PyTorch-Tutorials/
+*.txt

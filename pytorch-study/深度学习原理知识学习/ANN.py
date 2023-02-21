@@ -142,7 +142,9 @@ if __name__=="__main__":
 
     # 创建网络
     NN_wy = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+    print("=======创建网络成功=======\n")
     for e in range(epochs):
+        if e%1==0:    print("学习进度：{}%\n".format(e*100/epochs))
         # 所有数据集：read_dataset_train.images_num
         for i in range(read_dataset_train.images_num):
             # 生成标准对比输出
@@ -166,18 +168,25 @@ if __name__=="__main__":
     # 将输入0~255变为0~1
     inputs = (np.asfarray(inputs))/255*0.99+0.01
 
-    print("测试学习效果：\n")
+    # 保存错误的序号，识别标签，以及正确标签
+    file_Test = r'./test_error_correct.txt'
+    error_num = 0
+    with open(file_Test, "w") as f:
+        f.write("序号\tlabel\tlabels_correct\n")
+        for i in range(read_dataset_test.labels_num):
+            outputs = NN_wy.query(inputs[i])
+            label = np.argmax(outputs)
+            if not(int(label) == int(labels_correct[i])):
+                error_num += 1
+                # 写入错误的序号，识别标签，以及正确标签
+                f.write("{}\t{}\t{}\n".format(i+1, label, labels_correct[i]))
+
+    print("识别错误的个数：{}；测试学习的成功率为：{}\n".format(error_num, (read_dataset_test.labels_num-error_num)/read_dataset_test.labels_num))
 
     while_judge1 = True
     while_judge2 = True
-
+    print("进入选择测试训练效果\n")
     while while_judge1:
-
-        print("测试训练效果\n")
-
-        # 退出
-        # if(input("退出测试请输入e, 其他的继续：")=="e"):   break
-
         # 输入数值
         while while_judge2:
             test_num = input("测试请输入数字{}~{}(输入e退出): ".format(1, read_dataset_test.labels_num))
@@ -202,12 +211,7 @@ if __name__=="__main__":
             plt.ion()
             figure, ax = plt.subplots()
             im = ax.imshow(image)
-            plt.title('the label is : {}, the labelCorrect is : {}'.format(label, labels_correct[test_num]))
+            plt.title('the label_recognition is : {}\nthe label_Correct is : {}'.format(label, labels_correct[test_num]))
             plt.show()
-
-    # a = np.random.rand(3, 3)
-    # print(NN_wy.query(a))
-
-    # print(NN_wy.who)
 
     pass
