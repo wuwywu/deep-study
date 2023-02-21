@@ -144,7 +144,7 @@ if __name__=="__main__":
     NN_wy = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
     print("=======创建网络成功=======\n")
     for e in range(epochs):
-        if e%1==0:    print("\r", "学习进度：{}%".format(e*100/epochs), end='', flush=True)
+        if e%1==0:    print("\r", "学习进度：{} %".format(e*100/epochs), end='', flush=True)
         # 所有数据集：read_dataset_train.images_num
         for i in range(read_dataset_train.images_num):
             # 生成标准对比输出
