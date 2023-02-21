@@ -135,7 +135,7 @@ if __name__=="__main__":
     learning_rate = 0.01
 
     # 给定数据集训练次数
-    epochs = 100
+    epochs = 200
 
     # 初始化标准对比输出
     targets = np.zeros(output_nodes)+0.01
@@ -171,7 +171,8 @@ if __name__=="__main__":
     # 保存错误的序号，识别标签，以及正确标签
     file_Test = r'./test_error_correct.txt'
     error_num = 0
-    with open(file_Test, "w") as f:
+    with open(file_Test, "w") as f:   
+        f.write("样本数：{},\t训练轮数：{}\n".format(read_dataset_test.labels_num, epochs))
         f.write("序号\tlabel\tlabels_correct\n")
         for i in range(read_dataset_test.labels_num):
             outputs = NN_wy.query(inputs[i])
@@ -190,9 +191,15 @@ if __name__=="__main__":
         # 输入数值
         while while_judge2:
             test_num = input("测试请输入数字{}~{}(输入e退出): ".format(1, read_dataset_test.labels_num))
+            # 是e就退出
             if test_num=="e":   
                 while_judge1 = False
                 break
+                
+            if not test_num.isdigit():
+                print("请输入数字!!!\n")
+                continue
+
             test_num = int(test_num)-1
 
             if not(test_num>=0 and test_num<=read_dataset_test.labels_num-1):
