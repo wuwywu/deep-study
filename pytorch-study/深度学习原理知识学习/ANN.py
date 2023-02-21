@@ -158,7 +158,7 @@ if __name__=="__main__":
             targets[la_num] -= 0.99
 
     # 训练完成
-    print("训练完成！！！\n")
+    print("  ===训练完成！！！\n")
 
     #==================== 测试训练效果 ======================
     filename_images = "t10k-images-idx3-ubyte"
