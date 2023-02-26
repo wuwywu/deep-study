@@ -41,7 +41,7 @@ class neuralNetwork:
             1、给定训练样本计算输出
             2、将计算得到的输出与设置的标准输出做对比，得到误差函数指导网络权重更新
         '''
-        # 将数据转化为一位列向量
+        # 将数据转化为一维列向量
         inputs = np.array(inputs_list).reshape(self.inodes, 1)
         targets = np.array(targets_list).reshape(self.onodes, 1)
 
@@ -155,10 +155,10 @@ if __name__=="__main__":
             NN_wy.train(inputs[i], targets)
 
             # 初始化标准对比输出
-            targets[la_num] -= 0.99
+            targets[la_num] = 0
 
     # 训练完成
-    print("  ===训练完成！！！\n")
+    print("\n  ===训练完成！！！\n")
 
     #==================== 测试训练效果 ======================
     filename_images = "t10k-images-idx3-ubyte"
