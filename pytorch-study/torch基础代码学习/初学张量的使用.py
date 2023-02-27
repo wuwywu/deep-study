@@ -41,6 +41,7 @@ import torch.nn as nn
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 sys.path.append("../深度学习原理知识学习")
 # 导入数据集函数
@@ -63,6 +64,10 @@ class Classifier(nn.Module):
         self.inodes = inputnodes
         self.hnodes = hiddenodes
         self.onodes = outputnodes
+
+        # 记录训练进展的计数器和列表
+        self.counter = 0
+        self.progress = []
 
         # 定义神经网络层
         self.model = nn.Sequential(
@@ -114,6 +119,13 @@ class Classifier(nn.Module):
         self.optimiser.zero_grad()  # 将图中的梯度全部归零
         loss.backward()             # 计算网络中的梯度
         self.optimiser.step()       # 更新网络中可学习的参数
+
+        # 训练次数加一
+        self.counter += 1
+
+        # 记录损失函数
+        if self.counter%100==0:
+            self.progress.append(loss.item())
         pass
 
     def forward(self, x):
@@ -130,6 +142,14 @@ class Classifier(nn.Module):
         
         return outputs
 
+    def plot_progress(self):
+        # 画出损失函数
+        # print(self.progress)
+        plt.ion()
+        df = pd.DataFrame(self.progress, columns=['loss'])
+        df.plot(ylim=(0,0.25), figsize=(16,8), alpha=0.1, marker='.', grid=True, yticks=(0,0.125,0.25))
+        plt.show()
+        pass
 
 if __name__=="__main__":
 
@@ -151,7 +171,7 @@ if __name__=="__main__":
     learning_rate = 0.01
 
     # 给定数据集训练次数
-    epochs = 300
+    epochs = 1000
 
     # 初始化标准对比输出
     targets = np.zeros(output_nodes)+0.01
@@ -175,6 +195,9 @@ if __name__=="__main__":
 
     # 训练完成
     print("\n  ===训练完成！！！\n")
+
+    # 画出损失值
+    NN_wy.plot_progress()
 
     #==================== 测试训练效果 ======================
     filename_images = "t10k-images-idx3-ubyte"
