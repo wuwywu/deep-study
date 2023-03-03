@@ -50,7 +50,7 @@ x2 = torch.FloatTensor(2)   # 随机初始化维度
 x3_np = np.ones(2)
 # print(type(x3_np))  # numpy.ndarray
 x3 = torch.from_numpy(x3_np) # .type(dtype_gpu).to(device)
-print(x3.type())
+# print(x3.type())
 
 
 
