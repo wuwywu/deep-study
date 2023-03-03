@@ -171,7 +171,7 @@ if __name__=="__main__":
     learning_rate = 0.01
 
     # 给定数据集训练次数
-    epochs = 1000
+    epochs = 1
 
     # 初始化标准对比输出
     targets = np.zeros(output_nodes)+0.01

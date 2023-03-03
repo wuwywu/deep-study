@@ -94,6 +94,6 @@ if __name__ == "__main__":
     # read_dataset.debug()
     # 60000个数据集
     # choose_num = np.random.randint(0, 60000)
-    # read_dataset.plot_image(0)
+    read_dataset.plot_image(10)
 
-    read_dataset.run_images()
+    # read_dataset.run_images()
