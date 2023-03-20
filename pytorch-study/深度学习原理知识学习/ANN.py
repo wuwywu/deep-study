@@ -155,7 +155,7 @@ if __name__=="__main__":
             NN_wy.train(inputs[i], targets)
 
             # 初始化标准对比输出
-            targets[la_num] = 0
+            targets[la_num] = 0.01
 
     # 训练完成
     print("\n  ===训练完成！！！\n")
