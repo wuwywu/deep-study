@@ -104,7 +104,7 @@ class neuralNetwork:
             who = np.random.rand(self.onodes, self.hnodes)-0.5
         elif choose_way==2:
             wih = np.random.normal(0.0, self.hnodes**-0.5, (self.hnodes, self.inodes))
-            who = np.random.normal(0.0, self.onodes**-0.5, (self.hnodes, self.inodes))
+            who = np.random.normal(0.0, self.onodes**-0.5, (self.onodes, self.hnodes))
         else:   print("初始化权重错误")
 
         return wih, who
