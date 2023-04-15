@@ -132,3 +132,4 @@ dmypy.json
 *.zip
 Deep-Learning-with-PyTorch-Tutorials/
 *.txt
+*.h5py
