@@ -9,7 +9,7 @@ import numpy as np
 def im2col(input_date, filter_h, filter_w, stride=1, padding=0):
     """
     :parameter:
-    input_data : 思维数据构成的输入数据（迷你批次数，通道，高，宽）
+    input_data : 四维数据构成的输入数据（迷你批次数，通道，高，宽）
     filter_h : 滤波器的高
     filter_w : 滤波器的长
     stride : 步幅
@@ -35,9 +35,35 @@ def im2col(input_date, filter_h, filter_w, stride=1, padding=0):
     col = col.transpose(0,4,5,1,2,3).reshape(N*out_h*out_w,-1)
     return col
 
-def col2im():
-    pass
+def col2im(col, input_shape, filter_h, filter_w, stride=1, padding=0):
+    """
+    Parameters
+    ----------
+    :parameter:
+    col ： 输入二维数组
+    input_shape : 四维数据构成的输入数据（迷你批次数，通道，高，宽）
+    filter_h : 滤波器的高
+    filter_w : 滤波器的长
+    stride : 步幅
+    padding : 填充
+    :return:
+    img ： 输出(N,C,H,W)
+    """
+    N, C, H, W = input_shape
+    # 计算输出数据的高和宽(out_h,out_w)
+    out_h = (H+2*padding-filter_h)//stride+1
+    out_w = (W+2*padding-filter_w)//stride+1
+    col = col.reshape(N,out_h,out_w,C,filter_h,filter_w)
+    col = col.transpose(0,3,4,5,1,2)
 
+    img = np.zeros((N, C, H+2*padding+stride-1, W+2*padding+stride-1))
+    for x in range(filter_h):
+        x_max = x+stride*out_h
+        for y in range(filter_w):
+            y_max = y+stride*out_w
+            img[:,:,x:x_max:stride,y:y_max:stride] += col[:,:,x,y,:,:]
+
+    return img[:,:,padding:H+padding,padding:W+padding]
 
 if __name__=="__main__":
 
