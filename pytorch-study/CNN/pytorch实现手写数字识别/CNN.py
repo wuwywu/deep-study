@@ -87,28 +87,26 @@ class CNN_write(nn.Module):
         self.ACCprogress = []
 
     def init_weight(self):
-        a = 100
+        a = 70
         # modules() : Returns an iterator over all modules in the network.
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = a*m.kernel_size[0]*m.kernel_size[1]*m.in_channels
-                # m.weight.data = torch.sqrt(2./n)*torch.normal(mean=0, std=1,size=m.weight.shape)
-                m.weight.data.normal_(0, np.sqrt(2/n)) # 0, np.sqrt(2./n)
-                # torch.nn.init.kaiming_normal_(m.weight,nonlinearity='relu')
+                wight_init_scales = np.sqrt(2.0/n)
+                with torch.no_grad():
+                    m.weight.normal_(0, wight_init_scales) # 0, np.sqrt
                 if m.bias is not None:
-                    m.bias.data.zero_()
-                    # m.bias.data.uniform_(-0.1,0.1)
-                    # torch.nn.init.uniform_(m.bias, -0.1, 0.1)
+                    with torch.no_grad():
+                        m.bias.uniform_(-0.1,0.1)
 
             if isinstance(m, nn.Linear):
                 n = a*m.in_features
-                # m.weight.data = torch.sqrt(2./n)*torch.normal(mean=0, std=1,size=m.weight.shape)
-                m.weight.data.normal_(0, np.sqrt(0.05/n)) # 0, np.sqrt(2./n)
-                # torch.nn.init.kaiming_normal_(m.weight,nonlinearity='relu')
+                wight_init_scales = np.sqrt(2.0/n)
+                with torch.no_grad():
+                    m.weight.normal_(0, wight_init_scales) # 0, np.sqrt
                 if m.bias is not None:
-                    m.bias.data.zero_()
-                    # m.bias.data.uniform_(-0.1,0.1)
-                    # torch.nn.init.uniform_(m.bias, -0.1, 0.1)
+                    with torch.no_grad():
+                        m.bias.uniform_(-0.1,0.1)
 
     def forward(self, x):
         return self.model(x)
