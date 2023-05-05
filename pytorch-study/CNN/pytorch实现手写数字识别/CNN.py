@@ -65,8 +65,7 @@ class CNN_write(nn.Module):
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(50, 10),
-            # nn.Softmax(dim=1)
-            # nn.LogSoftmax(dim=1)
+            nn.Dropout(0.5),
         )
 
         # 初始化参量
@@ -87,31 +86,25 @@ class CNN_write(nn.Module):
         self.ACCprogress = []
 
     def init_weight(self):
-        a = 70
+        # a = a**-2
         # modules() : Returns an iterator over all modules in the network.
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                n = a*m.kernel_size[0]*m.kernel_size[1]*m.in_channels
-                wight_init_scales = np.sqrt(2.0/n)
-                with torch.no_grad():
-                    m.weight.normal_(0, wight_init_scales) # 0, np.sqrt
+                torch.nn.init.kaiming_uniform_(m.weight,a=np.sqrt(5))
+                # torch.nn.init.kaiming_normal_(m.weight,,a=np.sqrt(5))
                 if m.bias is not None:
-                    with torch.no_grad():
-                        m.bias.uniform_(-0.1,0.1)
+                    torch.nn.init.zeros_(m.bias)
 
             if isinstance(m, nn.Linear):
-                n = a*m.in_features
-                wight_init_scales = np.sqrt(2.0/n)
-                with torch.no_grad():
-                    m.weight.normal_(0, wight_init_scales) # 0, np.sqrt
+                torch.nn.init.kaiming_uniform_(m.weight,a=np.sqrt(5))
+                # torch.nn.init.kaiming_normal_(m.weight,,a=np.sqrt(5))
                 if m.bias is not None:
-                    with torch.no_grad():
-                        m.bias.uniform_(-0.1,0.1)
+                    torch.nn.init.zeros_(m.bias)
 
     def forward(self, x):
         return self.model(x)
 
-    def train(self, inputs, targets):
+    def trained(self, inputs, targets):
         outputs = self.forward(inputs)  # 网络输出值
         loss = self.loss_function(outputs,targets)  # 损失值
 
@@ -127,6 +120,7 @@ class CNN_write(nn.Module):
         self.counter += 1
 
     def accuracy(self, ims, labels, file_Test = r'./test_error_correct.txt'):
+        self.eval()
         per_datset = int(ims.shape[0]/self.batch_num)    # 每个数据集用的批次数
         acc = 0.0       # 测试精度初始化
         error_num = 0   # 错误数量
@@ -149,9 +143,12 @@ class CNN_write(nn.Module):
 
             f.write(f"总数量：{ims.shape[0]}；识别错误的个数：{error_num}；测试学习的成功率为：{acc}\n")
 
+        self.train()
+
         return acc
 
     def accuracy_progress(self, ims, labels):
+        self.eval()
         per_datset = int(ims.shape[0]/self.batch_num)    # 每个数据集用的批次数
         acc = 0.0       # 测试精度初始化
         for i in range(per_datset-1):
@@ -163,6 +160,7 @@ class CNN_write(nn.Module):
 
         acc = acc/ims.shape[0]
         if (self.counter % 1 == 0):    self.ACCprogress.append(acc)
+        self.train()
 
     def plot_progress(self):
         fig, ax = plt.subplots(1,2,figsize=(8, 4))
@@ -199,6 +197,7 @@ epochs = 5    # 设定世代数
 lens = len(md_trian)
 per_epoch = int(lens/batch_num)    # 每个世代用的批次数
 label_all, im_all, targets_all = md_eval[:] # 所有的测试数据
+CNN.train()                 # 开启训练
 # 训练开始
 for e in range(epochs):
     # 训练进度可视化
@@ -208,9 +207,10 @@ for e in range(epochs):
     for i in range(per_epoch-1):
         id_batch = num_dat[i*batch_num:(i+1)*batch_num]
         labels, im, targets = md_trian[id_batch]
-        CNN.train(im.to(device),targets.to(device))
+        CNN.trained(im.to(device),targets.to(device))
         CNN.accuracy_progress(im_all.to(device), label_all)
 
+CNN.eval()      # 开启评估
 labels, im, targets = md_eval[:]
 print(CNN.accuracy(im.to(device), labels))
 CNN.plot_progress()
