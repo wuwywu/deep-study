@@ -23,7 +23,8 @@ class CelebADataset(Dataset):
     def __getitem__(self, index):
         if index >= len(self.dataset): raise IndexError()
         img = torch.FloatTensor(np.array(self.dataset[str(index+1)+".jpg"]))
-
+        img = img.permute(2,0,1)    # (218,178,3) --> (3,218,178)
+        img = img.view(1,3,img.shape[1],img.shape[2])   # (N,C,H,W)
         return img/255.0
     
     def plot_image(self, index):
@@ -56,8 +57,10 @@ if __name__ == "__main__":
 
     file = r".//celeba//celeba_aligned_small.h5py"
     CelebA = CelebADataset(file)
-    print(len(CelebA))
-    # CelebA.plot_image(1)
+    # print(len(CelebA))
+    # print(CelebA[1].shape)
+    CelebA.plot_image(1)
+    
     # CelebA.run_images()
     for im in CelebA:
         pass
